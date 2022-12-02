@@ -37,13 +37,7 @@ func TestPartA(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			lines := strings.Split(tc.input, "\n")
 
-			var result = 0
-			for _, line := range lines {
-				inputs := strings.Split(line, " ")
-				elf, me := parseHand(inputs[0]), parseHand(inputs[1])
-
-				result += me.Int() + me.Result(elf).Int()
-			}
+			result := partA(lines)
 
 			is.Equal(result, tc.result) // correct result
 		})
@@ -67,13 +61,7 @@ func TestPartB(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			lines := strings.Split(tc.input, "\n")
 
-			var result = 0
-			for _, line := range lines {
-				inputs := strings.Split(line, " ")
-				elf, r := parseHand(inputs[0]), parseResult(inputs[1])
-
-				result += r.Int() + r.Get(elf).Int()
-			}
+			result := partB(lines)
 
 			is.Equal(result, tc.result) // correct result
 		})

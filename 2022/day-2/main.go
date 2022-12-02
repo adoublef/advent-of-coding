@@ -15,6 +15,8 @@ import (
 	_ "embed"
 	"fmt"
 	"strings"
+
+	"aoc.day-2/rps"
 )
 
 //go:embed test.txt
@@ -29,126 +31,28 @@ func main() {
 }
 
 func partA(lines []string) int {
-	var r = 0
+	var n = 0
 	for _, line := range lines {
 		inputs := strings.Split(line, " ")
-		elf, me := parseHand(inputs[0]), parseHand(inputs[1])
-		r += me.Int() + me.Result(elf).Int()
+		elf, _ := rps.ParseHand(inputs[0])
+		me, _ := rps.ParseHand(inputs[1])
+
+		n += me.Int() + me.Result(elf).Int()
 	}
 
-	return r
+	return n
 }
 
 func partB(lines []string) int {
-	var result = 0
+	var n = 0
 	for _, line := range lines {
 		inputs := strings.Split(line, " ")
-		elf, r := parseHand(inputs[0]), parseResult(inputs[1])
+		elf, _ := rps.ParseHand(inputs[0])
+		r, _ := rps.ParseResult(inputs[1])
 
-		result += r.Int() + r.Get(elf).Int()
+		me, _ := r.GetPair(elf)
+		n += r.Int() + me.Int()
 	}
 
-	return result
+	return n
 }
-
-type Hand int
-
-const (
-	Rock Hand = iota + 1
-	Paper
-	Scissors
-)
-
-func (h Hand) Int() int { return int(h) }
-
-func parseHand(s string) Hand {
-	switch s {
-	case "A", "X":
-		return Rock
-	case "B", "Y":
-		return Paper
-	case "C", "Z":
-		return Scissors
-	default:
-		panic("error")
-	}
-}
-
-type Result int
-
-const (
-	Lose Result = iota * 3
-	Draw
-	Win
-)
-
-func (res Result) Int() int { return int(res) }
-
-func (res Result) Get(a Hand) Hand {
-	switch res {
-	case Draw:
-		return a
-	case Lose:
-		return match[a]
-	case Win:
-		for w, l := range match {
-			if l == a {
-				return w
-			}
-		}
-		panic("impossible")
-	default:
-		panic("impossible")
-	}
-}
-
-func parseResult(s string) Result {
-	switch s {
-	case "X":
-		return Lose
-	case "Y":
-		return Draw
-	case "Z":
-		return Win
-	default:
-		panic("error")
-	}
-}
-
-func (h Hand) Result(elf Hand) Result {
-	switch {
-	case win(h, elf):
-		return Win
-	case lose(h, elf):
-		return Lose
-	default:
-		return Draw
-	}
-}
-
-// Key's are teh losing hand relative to the values which are the winning hand
-//
-//	map[loser]winner
-var match = map[Hand]Hand{
-	Rock:     Scissors,
-	Paper:    Rock,
-	Scissors: Paper,
-}
-
-func win(a, b Hand) bool {
-	return match[a] == b
-}
-
-func lose(a, b Hand) bool {
-	return match[b] == a
-
-	// for w, l := range match {
-	// 	if w == b {
-	// 		return a == l
-	// 	}
-	// }
-	// panic("impossible")
-}
-
-// elf + me = result
-// result - elf = me
