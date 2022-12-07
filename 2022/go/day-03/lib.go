@@ -8,15 +8,15 @@ import (
 func PartA(input string) string {
 	rucksacks := strings.Split(input, "\n")
 
-	var bs []Set
+	var ds []Dict
 	for _, rucksack := range rucksacks {
-		a, b := []rune(rucksack[:len(rucksack)/2]), []rune(rucksack[len(rucksack)/2:])
-		bs = append(bs, newSet(a...).Union(b...))
+		a, b := rucksack[:len(rucksack)/2], rucksack[len(rucksack)/2:]
+		ds = append(ds, newDict(a).Union(b))
 	}
 
 	var result int
-	for _, set := range bs {
-		for ch := range set {
+	for _, d := range ds {
+		for ch := range d {
 			if ch < 97 {
 				result += int(ch-'A') + 27
 			} else {
@@ -31,19 +31,18 @@ func PartA(input string) string {
 func PartB(input string) string {
 	rucksacks := strings.Split(input, "\n")
 
-	var groups [][3]Set
+	var groups []string
 	for i, rucksack := range rucksacks {
-		j, s := i/3, []rune(rucksack)
+		j, s := i/3, rucksack
 		if i%3 == 0 {
-			groups = append(groups, [3]Set{})
+			groups = append(groups, "")
 		}
-		groups[j][i%3] = newSet(s...)
+		groups[j] += newDict(s).String()
 	}
 
 	var res string
 	for _, group := range groups {
-		a, b, c := group[0], []rune(group[1].String()), []rune(group[2].String())
-		res += a.Union(b...).Union(c...).String()
+		res += string(newDict(group).Max())
 	}
 
 	var result int
@@ -58,41 +57,52 @@ func PartB(input string) string {
 	return strconv.Itoa(result)
 }
 
-type Set map[rune]struct{}
+type Dict map[rune]int
 
-func newSet(s ...rune) Set {
-	m := map[rune]struct{}{}
+func newDict(s string) Dict {
+	m := map[rune]int{}
 	for _, ch := range s {
-		m[ch] = struct{}{}
+		m[ch]++
 	}
 
 	return m
 }
 
-func (s Set) Add(r rune) {
-	s[r] = struct{}{}
+func (d Dict) Add(r rune) {
+	d[r]++
 }
 
-func (s Set) Has(r rune) bool {
-	_, ok := s[r]
+func (d Dict) Has(r rune) bool {
+	_, ok := d[r]
 	return ok
 }
 
-func (s Set) String() string {
+func (d Dict) String() string {
 	var sb strings.Builder
-	for ch := range s {
+	for ch := range d {
 		sb.WriteRune(ch)
 	}
 	return sb.String()
 }
 
-func (s Set) Union(b ...rune) Set {
-	s1 := newSet()
+func (d Dict) Union(b string) Dict {
+	s1 := newDict("")
 	for _, ch := range b {
-		if s.Has(ch) {
+		if d.Has(ch) {
 			s1.Add(ch)
 		}
 	}
 
 	return s1
+}
+
+func (d Dict) Max() rune {
+	var max rune
+	for ch := range d {
+		if d[ch] > d[max] {
+			max = ch
+		}
+	}
+
+	return max
 }
