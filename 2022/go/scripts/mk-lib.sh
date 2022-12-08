@@ -35,8 +35,11 @@ func_lib() {
     go work use "."
 
     # create two new files inside
-    echo "package lib" >"lib.go"
+    # echo "package lib" >"lib.go"
+    printf "package lib\nfunc PartA(input string)string{return \"\"}\nfunc PartB(input string)string{return \"\"}" >"lib.go"
     echo "package lib" >"lib_test.go"
+
+    go fmt
 
     code lib{,_test}.go
 }

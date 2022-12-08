@@ -10,9 +10,10 @@ func PartA(input string) string {
 
 	marker := 0
 	for len(window) < 4 {
-		if substr := string(input[marker]); strings.Contains(window, substr) {
-			window = window[strings.Index(window, substr)+1:]
-		}
+		s := string(input[marker])
+		// if strings.Contains(window, s) {
+		window = window[strings.Index(window, s)+1:]
+		// }
 		window += string(input[marker])
 		marker++
 	}
@@ -25,8 +26,8 @@ func PartB(input string) string {
 
 	marker := 0
 	for len(window) < 14 {
-		if substr := string(input[marker]); strings.Contains(window, substr) {
-			window = window[strings.Index(window, substr)+1:]
+		if s := string(input[marker]); strings.Contains(window, s) {
+			window = window[strings.Index(window, s)+1:]
 		}
 		window += string(input[marker])
 		marker++
