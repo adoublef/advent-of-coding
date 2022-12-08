@@ -1,6 +1,6 @@
 #!/bin/bash
 
-main() {
+func_main() {
     # check only one argument is allowed
     if [[ $# -ne 1 ]]; then
         echo "error: Too many/few arguments, expecting one" >&2
@@ -34,4 +34,4 @@ func_asset() {
     rm "./assets/$1.txt"
 }
 
-main "$@"
+func_main "$@"

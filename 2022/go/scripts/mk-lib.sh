@@ -1,6 +1,6 @@
 #!/bin/bash
 
-main() {
+func_main() {
     # check only one argument is allowed
     if [[ $# -ne 1 ]]; then
         echo "error: Too many/few arguments, expecting one" >&2
@@ -37,6 +37,8 @@ func_lib() {
     # create two new files inside
     echo "package lib" >"lib.go"
     echo "package lib" >"lib_test.go"
+
+    code lib{,_test}.go
 }
 
 func_asset() {
@@ -71,4 +73,4 @@ func_asset() {
     echo "$content" >"assets/$2.txt"
 }
 
-main "$@"
+func_main "$@"

@@ -3,6 +3,11 @@
 mklib:
 	bash ./scripts/mk-lib.sh $(day)
 
-rmlib: 
+rm: 
 	bash ./scripts/rm-lib.sh $(day)
-	
+
+main:
+	go run .
+
+test: 
+	go test ./day-0$(day)/ .
