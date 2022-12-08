@@ -1,7 +1,7 @@
 package main
 
 import (
-	d "day-03"
+	d "day-04"
 	"embed"
 	"fmt"
 )
@@ -10,7 +10,7 @@ import (
 var assets embed.FS
 
 func main() {
-	input, _ := assets.ReadFile("assets/day-03.txt")
+	input, _ := assets.ReadFile("assets/day-04.txt")
 
 	r := d.PartA(string(input))
 	fmt.Printf("result of part A is := %s\n", r)
